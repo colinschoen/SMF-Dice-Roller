@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<id>Arantor:DiceRoller</id>
+	<name>Dice Roller BBcode</name>
+	<version>1.3</version>
+	<type>modification</type>
+	
+	<install for="1.1 - 1.99.99">
+		<modification type="file">install11.xml</modification>
+		<modification type="file">common.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english_british.xml</modification>
+		<require-file name="dice_warn.gif" destination="$imagesdir" />
+		<require-file name="roll.gif" destination="$imagesdir/bbc" />
+	</install>
+	
+	<uninstall for="1.1 - 1.99.99">
+		<modification type="file" reverse="true">install11.xml</modification>
+		<modification type="file" reverse="true">common.xml</modification>
+		<modification type="file" reverse="true">english.xml</modification>
+		<modification type="file" reverse="true">english_british.xml</modification>
+		<remove-file name="$imagesdir/dice_warn.gif" />
+		<remove-file name="$imagesdir/bbc/roll.gif" />
+	</uninstall>
+	
+	<install for="2.0 RC1.2">
+		<modification type="file">install20rc12.xml</modification>
+		<modification type="file">common.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english_british.xml</modification>
+		<require-file name="dice_warn.gif" destination="$imagesdir" />
+		<require-file name="roll.gif" destination="$imagesdir/bbc" />
+	</install>
+	
+	<uninstall for="2.0 RC1.2">
+		<modification type="file" reverse="true">install20rc12.xml</modification>
+		<modification type="file" reverse="true">common.xml</modification>
+		<modification type="file" reverse="true">english.xml</modification>
+		<modification type="file" reverse="true">english_british.xml</modification>
+		<remove-file name="$imagesdir/dice_warn.gif" />
+		<remove-file name="$imagesdir/bbc/roll.gif" />
+	</uninstall>
+	
+	<install for="2.0 RC2, 2.0 RC3">
+		<modification type="file">install20rc2.xml</modification>
+		<modification type="file">common.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english_british.xml</modification>
+		<require-file name="dice_warn.gif" destination="$imagesdir" />
+		<require-file name="roll.gif" destination="$imagesdir/bbc" />
+	</install>
+	
+	<uninstall for="2.0 RC2, 2.0 RC3">
+		<modification type="file" reverse="true">install20rc2.xml</modification>
+		<modification type="file" reverse="true">common.xml</modification>
+		<modification type="file" reverse="true">english.xml</modification>
+		<modification type="file" reverse="true">english_british.xml</modification>
+		<remove-file name="$imagesdir/dice_warn.gif" />
+		<remove-file name="$imagesdir/bbc/roll.gif" />
+	</uninstall>
+	
+	<install for="2.0-2.0.99">
+		<modification type="file">install20rc2.xml</modification>
+		<modification type="file">common.xml</modification>
+		<modification type="file">english.xml</modification>
+		<modification type="file">english_british.xml</modification>
+		<require-file name="dice_warn.gif" destination="$imagesdir" />
+		<require-file name="roll.gif" destination="$imagesdir/bbc" />
+	</install>
+	
+	<uninstall for="2.0-2.0.99">
+		<modification type="file" reverse="true">install20rc2.xml</modification>
+		<modification type="file" reverse="true">common.xml</modification>
+		<modification type="file" reverse="true">english.xml</modification>
+		<modification type="file" reverse="true">english_british.xml</modification>
+		<remove-file name="$imagesdir/dice_warn.gif" />
+		<remove-file name="$imagesdir/bbc/roll.gif" />
+	</uninstall>
+</package-info>

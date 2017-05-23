@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://dev.smfchat.com/xsl/modification.xsl"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>Arantor:DiceRoller</id>
+	<version>1.3</version>
+	
+	<file name="$languagedir/Modifications.english.php">
+		<operation>
+			<search position="end" />
+			<add><![CDATA[
+$txt['dice_rolled'] = 'Rolled';
+$txt['dice_not_valid'] = 'is not a valid dice string!';
+$txt['dice_invalid_both'] = '(cannot be both greater than %d and less than %d)';
+$txt['dice_invalid_lower'] = '(cannot roll greater than %d on a %d sided die)';
+$txt['dice_total'] = 'total';
+$txt['dice_cheater'] = 'This dice roll has been tampered with!';
+$txt['bbc_code_roll'] = 'Dice roll';
+]]></add>
+		</operation>
+	</file>
+	
+	<file name="$languagedir/Modifications.english-utf8.php" error="skip">
+		<operation>
+			<search position="end" />
+			<add><![CDATA[
+$txt['dice_rolled'] = 'Rolled';
+$txt['dice_not_valid'] = 'is not a valid dice string!';
+$txt['dice_invalid_both'] = '(cannot be both greater than %d and less than %d)';
+$txt['dice_invalid_lower'] = '(cannot roll greater than %d on a %d sided die)';
+$txt['dice_total'] = 'total';
+$txt['dice_cheater'] = 'This dice roll has been tampered with!';
+$txt['bbc_code_roll'] = 'Dice roll';
+]]></add>
+		</operation>
+	</file>
+
+</modification>

@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://dev.smfchat.com/xsl/modification.xsl"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>Arantor:DiceRoller</id>
+	<version>1.3</version>
+	
+	<file name="$sourcedir/Subs.php">
+		<operation>
+			<search position="after"><![CDATA[			array(
+				'tag' => 'blue',
+]]></search>
+			<add><![CDATA[			array(
+				'tag' => 'blockquote',
+				'before' => '<div style="font-size:x-small; background-color:#ffffff; margin:5px 20px; border:1px dashed black; filter:alpha(opacity=50); opacity:0.5;">',
+				'after' => '</div>',
+			),
+]]></add>
+		</operation>
+	</file>
+	
+	<file name="$sourcedir/Subs-Post.php">
+		<operation>
+			<search position="before"><![CDATA[// Now let's quickly clean up things that will slow our parser (which are common in posted code.)
+	$message = strtr($message, array('[]' => '&#91;]', '[&#039;' => '&#91;&#039;'));]]></search>
+			<add><![CDATA[
+
+	// remove anyone who posted with the [blockquote] tag, bah, ye cheating riffraff
+	global $txt, $settings;
+	$message = preg_replace('~\[/blockquote\]~i', '', $message);
+	$message = preg_replace('~\[blockquote[^\]]*\]~i', "[img]{$settings['images_url']}/dice_warn.gif[/img] [color=red][b]{$txt['dice_cheater']}[/b][/color]\n", $message);
+	// roll them dices!
+	$message = preg_replace_callback('~\[roll\]([^\[]*)\[/roll\]~i', 'dicemod', $message);]]></add>
+		</operation>
+		<operation>
+			<search position="end" />
+			<add><![CDATA[
+
+function dicemod($string) {
+	global $txt;
+	$output = '[blockquote]';
+	$count = preg_match_all('~(\{([^}]+)\})?\s*([0-9]+)d([0-9]+)([\+\-][0-9]+)?(\^[0-9]+)?(v[0-9]+)?(\&lt;[0-9]+)?(\&gt;[0-9]+)?(x[0-9]+)?~i', $string[1], $thisdiceroll);
+	if($count) {
+		for($i = 0; $i < $count; $i++) {
+			$iterationtotal = (!empty($thisdiceroll[10][$i])) ? (int) substr($thisdiceroll[10][$i], 1) : 1;
+			if($iterationtotal > 20) $iterationtotal = 20;
+			
+			for($iterations = 0; $iterations < $iterationtotal; $iterations++) {
+				$qty_dice = (int) $thisdiceroll[3][$i];
+				if($qty_dice == 0)
+					$qty_dice = 1;
+				
+				if($qty_dice > 20)
+					$qty_dice = 20;
+				
+				$type_dice = (int) $thisdiceroll[4][$i];
+				if($type_dice < 2)
+					$type_dice = 2;
+				
+				if($type_dice > 1000)
+					$type_dice = 1000;
+		
+				$output .= (empty($thisdiceroll[2][$i]) ? $txt['dice_rolled'] : $thisdiceroll[2][$i] ) . ' ' . $qty_dice . 'd' . $type_dice . $thisdiceroll[5][$i] . $thisdiceroll[6][$i] . $thisdiceroll[7][$i] . $thisdiceroll[8][$i] . $thisdiceroll[9][$i] . ' : ';
+				$comma = false;
+				
+				$total = 0;
+				for($j = 0; $j < $qty_dice; $j++) {
+					$roll = mt_rand(1, $type_dice);
+					
+					if($comma)
+						$output .= ', ';
+					
+					// ^n syntax, requires roll to be above n else reroll figure
+					$lower = (!empty($thisdiceroll[6][$i])) ? (int) substr($thisdiceroll[6][$i], 1) : 0;
+					
+					// vn syntax, requires roll to be below n else reroll figure
+					$upper = (!empty($thisdiceroll[7][$i])) ? (int) substr($thisdiceroll[7][$i], 1) : 1 + $type_dice;
+
+					// switch if the wrong way around
+					if($upper < $lower) {
+						$t = $lower;
+						$lower = $upper;
+						$upper = $t;
+					}
+					
+					// sanity checks
+					if($lower >= $type_dice) {
+						$output .= sprintf($txt['dice_invalid_lower'], $lower, $thisdiceroll[4][$i]);
+						break;
+					}
+
+					if($upper - $lower < 2) {
+						$output .= sprintf($txt['dice_invalid_both'], $lower, $upper);
+						break;
+					}
+					
+					// reroll if necessary
+					while(($roll <= $lower) || ($roll >= $upper)) {
+						$output .= '[s]' . $roll . '[/s] ';
+						$roll = mt_rand(1, $thisdiceroll[4][$i]);
+					}
+
+					$valid = true;
+					if(!empty($thisdiceroll[8][$i])) {
+						// now let's see if there are any we should drop from < and > syntax
+						$lower = (int) substr($thisdiceroll[8][$i], 4);			
+						if($roll >= $lower) {
+							$output .= '[s]' . $roll . '[/s]';
+							$valid = false;
+						}
+					}
+					
+					if($valid && !empty($thisdiceroll[9][$i])) {
+						$upper = (int) substr($thisdiceroll[9][$i], 4);
+						if($roll <= $upper) {
+							$output .= '[s]' . $roll . '[/s]';
+							$valid = false;
+						}
+					}
+					
+					if($valid) {
+						$output .= $roll;
+						$total += $roll;
+					}
+					$comma = true;
+				}
+				
+				$mod = (int) $thisdiceroll[5][$i];
+				if($mod != 0) {
+					$output .= ($mod > 0) ? ' + ' . $mod : ' - ' . abs($mod);
+					$total += $mod;
+				}
+				
+				$output .= ', ' . $txt['dice_total'] . ' ' . $total;
+				
+				if($i < ($count - 1))
+					$output .= '<br />';
+
+				if($iterations < $iterationtotal - 1)
+					$output .= '<br />';
+			}
+		}
+
+	} else {
+		$output .= '\'' . $string[1] . '\' ' . $txt['dice_not_valid'];
+	}
+	$output .= '[/blockquote]';
+	return $output;
+}]]></add>
+		</operation>
+	</file>
+
+</modification>
