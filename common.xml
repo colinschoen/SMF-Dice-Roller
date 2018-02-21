@@ -39,7 +39,7 @@
 function dicemod($string) {
 	global $txt;
 	$output = '[blockquote]';
-	$count = preg_match_all('~(\{([^}]+)\})?\s*([0-9]+)d([0-9]+)([\+\-][0-9]+)?(\^[0-9]+)?(v[0-9]+)?(\&lt;[0-9]+)?(\&gt;[0-9]+)?(x[0-9]+)?~i', $string[1], $thisdiceroll);
+	$count = preg_match_all('~(\{([^}]+)\})?\s*([0-9]*)d([0-9]+)([\+\-][0-9]+)?(\^[0-9]+)?(v[0-9]+)?(\&lt;[0-9]+)?(\&gt;[0-9]+)?(x[0-9]+)?~i', $string[1], $thisdiceroll);
 	if($count) {
 		for($i = 0; $i < $count; $i++) {
 			$iterationtotal = (!empty($thisdiceroll[10][$i])) ? (int) substr($thisdiceroll[10][$i], 1) : 1;
